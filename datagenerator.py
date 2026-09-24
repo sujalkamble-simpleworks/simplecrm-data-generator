@@ -26,15 +26,23 @@ if "users" not in st.session_state:
     st.session_state.users = []
 
 if "username" not in st.session_state:
-    st.session_state.username = "admin"
+    st.session_state.username = os.getenv("SIMPLECRM_USERNAME", "admin")
 
 if "password" not in st.session_state:
-    st.session_state.password = "qkfQsRqjn1U/h4kptj0ZcGwxzL+uwBS42BMAH2oPKxuV1aV5ogiZatCPBl97dt8uZ2N+VicrHNB2wpFPMmRMrhdC3wUBgeR3RcC/29LOfSmmCO1R7vwmVrwrFCoHmbYWrpKer+FO2ABxzy6l6h7vFzjz73XIU/Qo93DLURnInl7ywPgP2oytnOBv7i2SwbZyAgoSrSyXdlFkzFHGrUnMwnVa64v7oonzMcxk00T+5ZlbE6qNMgESqyPJV/eYTjtNv0eYPK53bohH/G6LbzhtEx8e/6D585EVlhWQFIrT0yM+eOCQiFT5MvlMSID3i12ksCt/yoGlJwBAdW11BET+FqZa1QyC8v86aHBawWWekxH69zucMV2qdS38nGG5WOBeIwNTTByamVd69kv9+HxTWVR+oUoj55r0Kh4aoXhur+SmVFV/Jf6C9EC6d6McKz7E/VXACA2ySxtD0IiYCJ3YLtYCU4GDDfVi4mWddiDmYJeVByBucyG/DsbmU+PYZ4G9hvY55dp0ba2QybepF9yTIu8gLOMqcuMnY38JW2XSF2zvPuZx1a4ZblWYtMkhdZ4MwVL1lATIxyaWQpYS7qOyo0Rd9davM3lqXmy+oANYIqyHVu407ayXwzwHckuq5stPvbo8UyZEwFchxDI6ISefnrbNrwGCOT34PNptsK5/wjg="
+    st.session_state.password = os.getenv("SIMPLECRM_PASSWORD", "")
 
 with st.sidebar:
     if st.session_state.generating is False:
         st.session_state.url = st.text_input(
             "Enter the API URL of your SimpleCRM instance", st.session_state.url
+        )
+        st.session_state.username = st.text_input(
+            "Username", st.session_state.username
+        )
+        st.session_state.password = st.text_input(
+            "RSA-encrypted API password",
+            st.session_state.password,
+            type="password",
         )
     else:
         st.write(f"SimpleCRM Instance URL: {st.session_state.url}")
@@ -136,10 +144,15 @@ with st.sidebar:
 
 if st.session_state.generating:
     st.header("Data Generation Progress")
-    generator = RecordCreator(
-        {"username": st.session_state.username, "password": st.session_state.password},
-        st.session_state.url,
-    )
+    try:
+        generator = RecordCreator(
+            {"username": st.session_state.username, "password": st.session_state.password},
+            st.session_state.url,
+        )
+    except Exception as error:
+        st.session_state.generating = False
+        st.error(f"Authentication failed: {error}")
+        st.stop()
     total_records = sum(module["records"] for module in st.session_state.modules.values())
     
     with st.spinner("Processign modules..."):

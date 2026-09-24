@@ -27,6 +27,7 @@ streamlit run datagenerator.py
 - It uses generated fake values and does not guarantee production-safe data quality.
 - CSV output is written under the `data/` folder.
 - API authentication and module metadata requests depend on the target SimpleCRM instance being reachable and configured correctly.
+- The API password must be RSA-encrypted for the target instance. Enter that encrypted value in the sidebar, or set `SIMPLECRM_PASSWORD` before starting the app. A ciphertext copied from another SimpleCRM instance will fail authentication.
 
 ## License
 
