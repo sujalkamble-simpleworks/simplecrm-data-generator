@@ -21,15 +21,6 @@ Start the Streamlit app from the project root:
 streamlit run datagenerator.py
 ```
 
-## How It Works
-
-The app does the following:
-1. Authenticates against the configured SimpleCRM API endpoint
-2. Fetches layout metadata for each selected module
-3. Builds field templates using the `faker_utils.py` logic
-4. Generates records based on the field types
-5. Saves each module’s output as a CSV file in the `data/` directory
-
 ## Important Notes
 
 - This project is intended for test, sandbox, and demo data generation.
@@ -43,4 +34,4 @@ This project does not currently include a license file. If you plan to share or 
 
 ## Contributing
 
-This repo is a simple internal utility project. Feel free to improve the data generation logic, add more field templates, or extend the export options.
+This repo is a simple internal utility project. Feel free to improve the data generation logic, add more field templates, or extend the export options - Sujal Kamble...
